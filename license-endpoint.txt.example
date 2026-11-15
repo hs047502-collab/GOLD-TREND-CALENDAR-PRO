@@ -1,0 +1,4 @@
+# এই ফাইলের নাম বদলে license-endpoint.txt করুন, নিচের দুই লাইন নিজের মান দিয়ে ভরুন।
+# এরপর শুধু:  node build.mjs --obfuscate --out github-upload/index.html
+https://gtc-license.YOURNAME.workers.dev
+PASTE_YOUR_TOKEN_SECRET_HERE

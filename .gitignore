@@ -1,0 +1,5 @@
+# never commit build sources, server secrets or test files here
+*.mjs
+*secret*
+license-endpoint.txt
+node_modules/

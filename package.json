@@ -1,0 +1,18 @@
+{
+  "name": "gtc5-licensed",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test:unit": "node LICENSE-SERVER/test/licensing.test.mjs",
+    "test:e2e": "node e2e.mjs",
+    "dev:api": "node LICENSE-SERVER/dev-server.mjs",
+    "dev:app": "node build.mjs --endpoint http://127.0.0.1:8787 --token dev-token --allow-local --out dist/_dev/index.html",
+    "deploy:api": "cd LICENSE-SERVER && wrangler deploy"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.1.1",
+    "playwright": "^1.49.1",
+    "terser": "^5.37.0"
+  }
+}

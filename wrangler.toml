@@ -1,0 +1,23 @@
+# =====================================================================
+# GOLD Trend Calendar Pro v5 — license API
+# ---------------------------------------------------------------------
+#   npm i -g wrangler            (or use npx wrangler)
+#   wrangler login
+#   wrangler kv namespace create LIC_KV      → paste the id below
+#   wrangler secret put LICENSE_SECRET       → long random string (NEVER ships)
+#   wrangler secret put TOKEN_SECRET         → another random string (goes into the app)
+#   wrangler secret put OWNER_PASSWORD       → your owner-console password (8+ chars)
+#   wrangler deploy
+# =====================================================================
+name = "gtc-license"
+main = "src/worker.mjs"
+compatibility_date = "2026-01-01"
+
+[vars]
+GRACE_DAYS = "30"          # offline token: refresh after this many days
+EXTRA_OFFLINE_DAYS = "7"   # ... and hard-stop this many days after that
+DEVICE_LOCK = "1"          # "0" = one key may activate on several devices
+
+[[kv_namespaces]]
+binding = "LIC_KV"
+id = "PASTE_KV_NAMESPACE_ID_HERE"

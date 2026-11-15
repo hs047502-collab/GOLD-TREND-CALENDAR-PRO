@@ -1,0 +1,70 @@
+GOLD Trend Calendar Pro v5.1 — server-verified licensing
+========================================================
+
+এই ফোল্ডারে কী আছে
+--------------------
+README.md ............. পুরো সিস্টেমের ব্যাখ্যা + ফোল্ডার ম্যাপ  (এখান থেকে শুরু)
+DEPLOY.md ............. ধাপে ধাপে ডিপ্লয় গাইড (বাংলা)          ← সবচেয়ে দরকারি
+SECURITY.md ........... কী সুরক্ষিত, কী নয় — সৎ হিসাব
+START-HERE.txt ........ এই ফাইল
+
+github-upload/ ........ ⬅ GitHub-এ শুধু এই ফোল্ডারটাই যাবে
+   index.html            obfuscated অ্যাপ (একমাত্র আসল ফাইল)
+   404.html robots.txt README.md .gitignore
+
+LICENSE-SERVER/ ....... আপনার লাইসেন্স সার্ভার (কখনো GitHub-এ দেবেন না)
+   lib/licensing.mjs     কি তৈরি/যাচাই/টোকেনের কোর
+   src/worker.mjs        Cloudflare Worker API
+   src/store.mjs         KV / ফাইল / মেমরি স্টোর
+   owner-cli.mjs         টার্মিনাল থেকে কি ইস্যু/এক্সটেন্ড/রিভোক
+   dev-server.mjs        লোকালি টেস্ট করার সার্ভার
+   wrangler.toml         ডিপ্লয় কনফিগ
+   test/                 ১৪টা ইউনিট টেস্ট
+
+src/index.html ........ আপনার দেওয়া আসল v5.0 ফাইল (হাত দেবেন না)
+patches/ .............. লাইসেন্স সিস্টেমের নতুন কোড (build.mjs বসায়)
+build.mjs ............. আসল ফাইল → প্যাচড + obfuscated বিল্ড
+e2e.mjs ............... ২৭টা এন্ড-টু-এন্ড টেস্ট (আসল ক্রোম)
+dist/ ................. লোকাল বিল্ড (GitHub-এ দেবেন না)
+license-endpoint.txt.example ... কপি করে license-endpoint.txt বানান
+
+ধাপ ১ — একবার
+--------------
+    cd LICENSE-SERVER && npm i -g wrangler && wrangler login
+    wrangler kv namespace create LIC_KV        → id টা wrangler.toml-এ বসান
+    wrangler secret put LICENSE_SECRET         (র‍্যান্ডম, গোপন — কোথাও শেয়ার নয়)
+    wrangler secret put TOKEN_SECRET           (লিখে রাখুন, বিল্ডে লাগবে)
+    wrangler secret put OWNER_PASSWORD         (কনসোলের পাসওয়ার্ড, ৮+ অক্ষর)
+    wrangler deploy                            → https://gtc-license.xxx.workers.dev
+
+ধাপ ২ — বিল্ড
+-------------
+    cd ..            (GTC ফোল্ডারে ফিরে)
+    cp license-endpoint.txt.example license-endpoint.txt
+    notepad license-endpoint.txt    # ১ম লাইন Worker URL, ২য় লাইন TOKEN_SECRET
+    npm i            (terser + javascript-obfuscator, শুধু প্রথমবার)
+    node build.mjs --obfuscate --out github-upload/index.html
+
+ধাপ ৩ — GitHub
+--------------
+    github-upload/ ফোল্ডারের ৫টা ফাইল → নতুন রিপোতে Upload files
+    Settings → Pages → Branch main, folder / (root) → Save
+    লিংক: https://আপনারইউজারনেম.github.io/রিপোনাম/
+
+ধাপ ৪ — প্রথম কি
+----------------
+    লিংক খুলুন → HS লোগোয় ৫ ট্যাপ → OWNER_PASSWORD → 🔑 Keys
+    → বায়ারের Gmail + প্ল্যান → Issue on server → activation line কপি → বায়ারকে দিন
+
+টেস্ট চালাতে (ঐচ্ছিক)
+---------------------
+    node LICENSE-SERVER/test/licensing.test.mjs      # ১৪টা
+    (টার্মিনাল ১) node LICENSE-SERVER/dev-server.mjs
+    (টার্মিনাল ২) node build.mjs --endpoint http://127.0.0.1:8787 --token dev-token --allow-local --out dist/_dev/index.html
+    node e2e.mjs                                    # ২৭টা
+
+⚠️  মনে রাখুন
+-------------
+• LICENSE_SECRET কোথাও কমিট/শেয়ার করবেন না — হারালে পুরোনো কি আর যাচাই হবে না
+• GitHub-এ শুধু github-upload/ এর ভেতরের জিনিস
+• ডিফল্ট সল্ট দিয়ে বানানো পুরোনো সব কি আর কাজ করবে না — যাদের বেচেছেন, নতুন কি দিন
